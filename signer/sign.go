@@ -8,37 +8,29 @@ import (
 )
 
 type Signer interface {
-	Sign() string
+	Sign(string, string, string) string
 }
 
 type signer struct {
-	expire   string
-	secret   string
-	path     string
-	clientIp string
+	secret string
 }
 
-func NewSigner(expire, secret, path, clientIp string) Signer {
+func NewSigner(secret string) Signer {
 	return &signer{
-		expire:   expire,
-		secret:   secret,
-		path:     path,
-		clientIp: clientIp,
+		secret: secret,
 	}
 }
 
-func (s *signer) Sign() string {
-	str := fmt.Sprintf("%s%s%s %s", s.expire, s.path, s.clientIp, s.secret)
-	fmt.Println("str", str)
-
-	//'2147483647/s/link127.0.0.1 secret'
+func (s *signer) Sign(expire, prefix, path string) string {
+	str := fmt.Sprintf("%s/read%s%s %s", expire, prefix, path, s.secret)
 
 	h := md5.New()
-
 	h.Write([]byte(str))
+
 	base64Str := base64.StdEncoding.EncodeToString(h.Sum(nil))
-	finalStr := SanitizeString(base64Str)
-	return fmt.Sprintf("%s?md5=%s&expires=%s", s.path, finalStr, s.expire)
+	finalMd5 := SanitizeString(base64Str)
+
+	return fmt.Sprintf("http://blobstore.service.cf.internal/read%s%s?md5=%s&expires=%s", prefix, path, finalMd5, expire)
 }
 
 func SanitizeString(input string) string {
