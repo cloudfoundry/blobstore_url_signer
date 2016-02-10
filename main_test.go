@@ -3,6 +3,7 @@ package main_test
 import (
 	"net/http"
 	"os/exec"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -10,13 +11,20 @@ import (
 )
 
 var _ = Describe("main", func() {
-	It("Default server port to 8080", func() {
-		result := runSigner()
+	var result *Session
 
+	BeforeEach(func() {
+		result = runSigner()
+		time.Sleep(10 * time.Millisecond)
+	})
+
+	AfterEach(func() {
+		result.Kill()
+	})
+
+	It("Default server port to 8080", func() {
 		_, err := http.Get("http://127.0.0.1:8080")
 		Expect(err).ToNot(HaveOccurred())
-
-		result.Kill()
 	})
 })
 

@@ -21,7 +21,7 @@ var _ = Describe("Signer", func() {
 
 			signer := signer.NewSigner(secret)
 			signedUrl := signer.Sign(expires, path, clientIp)
-			Expect(signedUrl).To(Equal("http://blobstore.bosh-lite.com/s/link?md5=_e4Nc3iduzkWRm01TBBNYw&expires=2147483647"))
+			Expect(signedUrl).To(Equal("http://blobstore.service.cf.internal/read/s/link127.0.0.1?md5=_knxkK3oSSL30hHYPZ2NOw&expires=2147483647"))
 		})
 	})
 

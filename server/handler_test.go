@@ -31,7 +31,7 @@ var _ = Describe("handlers", func() {
 		BeforeEach(func() {
 			var err error
 
-			request, err = http.NewRequest("GET", "http://user:pass@127.0.0.1:8080/sign?expire=123123&secret=topSecret", nil)
+			request, err = http.NewRequest("GET", "http://user:pass@127.0.0.1:8080/sign?expire=123123&secret=topSecret&prefix=blobstore&path=1c/9a/3234-sdfs", nil)
 			Expect(err).ToNot(HaveOccurred())
 		})
 
@@ -42,16 +42,16 @@ var _ = Describe("handlers", func() {
 
 		It("sends the signer the correct params", func() {
 			serverHandler.SignUrl(resp, request)
-			expire, path, clientIp := fakeSigner.SignArgsForCall(0)
+			expire, prefix, path := fakeSigner.SignArgsForCall(0)
 			Expect(expire).To(Equal("123123"))
-			Expect(path).To(Equal("/read/link"))
-			Expect(clientIp).To(Equal("127.0.0.1"))
+			Expect(prefix).To(Equal("blobstore"))
+			Expect(path).To(Equal("1c/9a/3234-sdfs"))
 		})
 
 		It("writes the signed URL back to requester", func() {
 			fakeSigner.SignReturns("/link/?md5=signedurl")
 			serverHandler.SignUrl(resp, request)
-			Expect(resp.Body.String()).To(Equal("/link/?md5=signedurl"))
+			Expect(resp.Body.String()).To(ContainSubstring("/link/?md5=signedurl"))
 		})
 	})
 
