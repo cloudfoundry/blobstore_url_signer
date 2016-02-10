@@ -12,12 +12,16 @@ type ServerHandlers interface {
 }
 
 type handlers struct {
-	signer signer.Signer
+	signer   signer.Signer
+	user     string
+	password string
 }
 
-func NewServerHandlers(signer signer.Signer) ServerHandlers {
+func NewServerHandlers(signer signer.Signer, user, password string) ServerHandlers {
 	return &handlers{
-		signer: signer,
+		signer:   signer,
+		user:     user,
+		password: password,
 	}
 }
 
