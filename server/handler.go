@@ -26,7 +26,12 @@ func NewServerHandlers(signer signer.Signer, user, password string) ServerHandle
 }
 
 func (h *handlers) SignUrl(w http.ResponseWriter, r *http.Request) {
-	// userName, password, _ := r.BasicAuth()
+	userName, password, _ := r.BasicAuth()
+
+	if userName != h.user || password != h.password {
+		http.Error(w, "403 Forbidden : Failed to autheticate", 403)
+		return
+	}
 
 	u, _ := url.Parse(r.URL.String())
 	queries, _ := url.ParseQuery(u.RawQuery)
