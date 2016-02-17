@@ -8,19 +8,15 @@ import (
 )
 
 var (
-	flagBlobstoreSecret   string
-	flagBlobstoreUser     string
-	flagBlobstorePassword string
+	flagBlobstoreSecret string
 )
 
 func main() {
 	flag.StringVar(&flagBlobstoreSecret, "secret", "", "The secret for signing webdav url")
-	flag.StringVar(&flagBlobstoreUser, "user", "", "The username for identifying internal client")
-	flag.StringVar(&flagBlobstorePassword, "password", "", "The password for identifying internal client")
 	flag.Parse()
 
 	urlSigner := signer.NewSigner(flagBlobstoreSecret)
-	serverHandlers := server.NewServerHandlers(urlSigner, flagBlobstoreUser, flagBlobstorePassword)
+	serverHandlers := server.NewServerHandlers(urlSigner)
 	s := server.NewServer(8080, "127.0.0.1", serverHandlers)
 	s.Start()
 }

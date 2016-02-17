@@ -7,32 +7,22 @@ import (
 	"github.com/cloudfoundry/blobstore_url_signer/signer"
 )
 
+//go:generate counterfeiter -o fakes/fake_server_handlers.go . ServerHandlers
 type ServerHandlers interface {
 	SignUrl(w http.ResponseWriter, r *http.Request)
 }
 
 type handlers struct {
-	signer   signer.Signer
-	user     string
-	password string
+	signer signer.Signer
 }
 
-func NewServerHandlers(signer signer.Signer, user, password string) ServerHandlers {
+func NewServerHandlers(signer signer.Signer) ServerHandlers {
 	return &handlers{
-		signer:   signer,
-		user:     user,
-		password: password,
+		signer: signer,
 	}
 }
 
 func (h *handlers) SignUrl(w http.ResponseWriter, r *http.Request) {
-	userName, password, _ := r.BasicAuth()
-
-	if userName != h.user || password != h.password {
-		http.Error(w, "403 Forbidden : Failed to autheticate", 403)
-		return
-	}
-
 	u, _ := url.Parse(r.URL.String())
 	queries, _ := url.ParseQuery(u.RawQuery)
 	expirationDate := queries["expire"][0]

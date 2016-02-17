@@ -23,11 +23,10 @@ var _ = Describe("handlers", func() {
 
 	BeforeEach(func() {
 		fakeSigner = &fakes.FakeSigner{}
-		serverHandler = server.NewServerHandlers(fakeSigner, "user", "pass")
+		serverHandler = server.NewServerHandlers(fakeSigner)
 		resp = httptest.NewRecorder()
 		request, err = http.NewRequest("GET", "http://127.0.0.1:8080/sign?expire=123123&secret=topSecret&prefix=blobstore&path=1c/9a/3234-sdfs", nil)
 		Expect(err).ToNot(HaveOccurred())
-		request.SetBasicAuth("user", "pass")
 	})
 
 	Describe("SignUrl()", func() {
@@ -48,39 +47,6 @@ var _ = Describe("handlers", func() {
 			fakeSigner.SignReturns("/link/?md5=signedurl")
 			serverHandler.SignUrl(resp, request)
 			Expect(resp.Body.String()).To(ContainSubstring("/link/?md5=signedurl"))
-		})
-
-		Context("Authentication", func() {
-			Context("When succeed", func() {
-				It("It returns 302", func() {
-					serverHandler.SignUrl(resp, request)
-					Expect(err).ToNot(HaveOccurred())
-
-					Expect(resp.Code).To(Equal(302))
-				})
-			})
-
-			Context("When user name does not match", func() {
-				It("It returns 403", func() {
-					request.SetBasicAuth("bad-user", "pass")
-
-					serverHandler.SignUrl(resp, request)
-					Expect(err).ToNot(HaveOccurred())
-
-					Expect(resp.Code).To(Equal(403))
-				})
-			})
-
-			Context("When password does not match", func() {
-				It("It returns 403", func() {
-					request.SetBasicAuth("user", "bad-pass")
-
-					serverHandler.SignUrl(resp, request)
-					Expect(err).ToNot(HaveOccurred())
-
-					Expect(resp.Code).To(Equal(403))
-				})
-			})
 		})
 	})
 })
