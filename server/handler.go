@@ -1,6 +1,7 @@
 package server
 
 import (
+	"io"
 	"net/http"
 	"net/url"
 
@@ -30,5 +31,5 @@ func (h *handlers) SignUrl(w http.ResponseWriter, r *http.Request) {
 	prefix := queries["prefix"][0]
 
 	redirectUrl := h.signer.Sign(expirationDate, prefix, path)
-	http.Redirect(w, r, redirectUrl, http.StatusFound)
+	io.WriteString(w, redirectUrl)
 }
