@@ -43,6 +43,19 @@ var _ = Describe("handlers", func() {
 			Expect(path).To(Equal("1c/9a/3234-sdfs"))
 		})
 
+		Context("When params does not include prefix", func() {
+			It("still send the signer the correct params with prefix as an empty string", func() {
+				request, err = http.NewRequest("GET", "http://127.0.0.1:8080/sign?expire=123123&secret=topSecret&path=1c/9a/3234-sdfs", nil)
+				Expect(err).ToNot(HaveOccurred())
+
+				serverHandler.SignUrl(resp, request)
+				expire, prefix, path := fakeSigner.SignArgsForCall(0)
+				Expect(expire).To(Equal("123123"))
+				Expect(prefix).To(Equal(""))
+				Expect(path).To(Equal("1c/9a/3234-sdfs"))
+			})
+		})
+
 		It("writes the signed URL back to requester", func() {
 			fakeSigner.SignReturns("/link/?md5=signedurl")
 			serverHandler.SignUrl(resp, request)

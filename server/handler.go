@@ -28,7 +28,11 @@ func (h *handlers) SignUrl(w http.ResponseWriter, r *http.Request) {
 	queries, _ := url.ParseQuery(u.RawQuery)
 	expirationDate := queries["expire"][0]
 	path := queries["path"][0]
-	prefix := queries["prefix"][0]
+
+	prefix := ""
+	if len(queries["prefix"]) > 0 {
+		prefix = queries["prefix"][0]
+	}
 
 	redirectUrl := h.signer.Sign(expirationDate, prefix, path)
 	io.WriteString(w, redirectUrl)
