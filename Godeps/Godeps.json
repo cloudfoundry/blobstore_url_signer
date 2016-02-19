@@ -1,0 +1,23 @@
+{
+	"ImportPath": "github.com/cloudfoundry/blobstore_url_signer",
+	"GoVersion": "go1.5.1",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "26a6070f849969ba72b72256e9f14cf519751690"
+		},
+		{
+			"ImportPath": "github.com/onsi/ginkgo",
+			"Comment": "v1.2.0-11-gd94e2f4",
+			"Rev": "d94e2f4000332f62b356ecb2840c98f4218f5358"
+		},
+		{
+			"ImportPath": "github.com/onsi/gomega",
+			"Comment": "v1.0-65-g0652f5f",
+			"Rev": "0652f5f3ba4e1226d4e7811215d3c2f80d37f919"
+		}
+	]
+}
