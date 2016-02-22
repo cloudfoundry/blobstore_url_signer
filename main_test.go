@@ -1,7 +1,8 @@
 package main_test
 
 import (
-	"net/http"
+	"net"
+	"os"
 	"os/exec"
 	"time"
 
@@ -12,18 +13,20 @@ import (
 
 var _ = Describe("main", func() {
 	var result *Session
+	var unixAddress string = "/tmp/test.sock"
 
 	BeforeEach(func() {
-		result = runSigner()
+		result = runSigner("-network", "unix", "-laddr", unixAddress)
 		time.Sleep(10 * time.Millisecond)
 	})
 
 	AfterEach(func() {
+		os.Remove(unixAddress)
 		result.Kill()
 	})
 
-	It("Default server port to 8080", func() {
-		_, err := http.Get("http://127.0.0.1:8080")
+	It("Listens on the network and address supplied by argument", func() {
+		_, err := net.Dial("unix", unixAddress)
 		Expect(err).ToNot(HaveOccurred())
 	})
 })

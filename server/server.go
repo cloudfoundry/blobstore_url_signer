@@ -1,11 +1,9 @@
 package server
 
 import (
-	"fmt"
 	"net"
 	"net/http"
-
-	"github.com/gorilla/mux"
+	"os"
 )
 
 type Server interface {
@@ -14,36 +12,32 @@ type Server interface {
 }
 
 type server struct {
-	port     int
-	listener net.Listener
-	handlers ServerHandlers
+	protocal   string
+	unixSocket string
+	listener   net.Listener
+	handlers   ServerHandlers
 }
 
-func NewServer(port int, addr string, handlers ServerHandlers) Server {
-	listener, err := net.Listen("tcp", fmt.Sprintf("%s:%d", addr, port))
+func NewServer(protocal string, socket string, handlers ServerHandlers) Server {
+	listener, err := net.Listen(protocal, socket)
 	if err != nil {
 		panic(err)
 	}
 
 	return server{
-		port:     port,
-		listener: listener,
-		handlers: handlers,
+		unixSocket: socket,
+		listener:   listener,
+		handlers:   handlers,
 	}
 }
 
 func (s server) Start() {
-	s.registerHandlers()
-	http.Serve(s.listener, nil)
-}
-
-func (s server) registerHandlers() {
-	r := mux.NewRouter()
-	r.Methods("GET").Path("/sign").HandlerFunc(s.handlers.SignUrl)
-
-	http.Handle("/", r)
+	http.Serve(s.listener, http.HandlerFunc(s.handlers.SignUrl))
 }
 
 func (s server) Stop() {
 	s.listener.Close()
+	if s.protocal == "unix" {
+		os.Remove(s.unixSocket)
+	}
 }

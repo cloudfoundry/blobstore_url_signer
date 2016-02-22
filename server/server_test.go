@@ -11,7 +11,6 @@ import (
 )
 
 var _ = Describe("Server", func() {
-
 	var (
 		fakeHandler *fakes.FakeServerHandlers
 		s           server.Server
@@ -19,7 +18,7 @@ var _ = Describe("Server", func() {
 
 	BeforeEach(func() {
 		fakeHandler = &fakes.FakeServerHandlers{}
-		s = server.NewServer(8080, "127.0.0.1", fakeHandler)
+		s = server.NewServer("tcp", ":8080", fakeHandler)
 		go s.Start()
 	})
 
@@ -27,8 +26,8 @@ var _ = Describe("Server", func() {
 		s.Stop()
 	})
 
-	It("has a /sign endpoint", func() {
-		_, err := http.Get("http://127.0.0.1:8080/sign")
+	It("serves with the SignUrl handler", func() {
+		_, err := http.Get("http://127.0.0.1:8080")
 
 		Expect(err).ToNot(HaveOccurred())
 		Expect(fakeHandler.SignUrlCallCount()).To(Equal(1))
