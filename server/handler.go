@@ -26,14 +26,9 @@ func NewServerHandlers(signer signer.Signer) ServerHandlers {
 func (h *handlers) SignUrl(w http.ResponseWriter, r *http.Request) {
 	u, _ := url.Parse(r.URL.String())
 	queries, _ := url.ParseQuery(u.RawQuery)
-	expirationDate := queries["expire"][0]
+	expirationDate := queries["expires"][0]
 	path := queries["path"][0]
 
-	prefix := ""
-	if len(queries["prefix"]) > 0 {
-		prefix = queries["prefix"][0]
-	}
-
-	redirectUrl := h.signer.Sign(expirationDate, prefix, path)
+	redirectUrl := h.signer.Sign(expirationDate, path)
 	io.WriteString(w, redirectUrl)
 }

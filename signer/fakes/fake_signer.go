@@ -8,28 +8,26 @@ import (
 )
 
 type FakeSigner struct {
-	SignStub        func(string, string, string) string
+	SignStub        func(string, string) string
 	signMutex       sync.RWMutex
 	signArgsForCall []struct {
 		arg1 string
 		arg2 string
-		arg3 string
 	}
 	signReturns struct {
 		result1 string
 	}
 }
 
-func (fake *FakeSigner) Sign(arg1 string, arg2 string, arg3 string) string {
+func (fake *FakeSigner) Sign(arg1 string, arg2 string) string {
 	fake.signMutex.Lock()
 	fake.signArgsForCall = append(fake.signArgsForCall, struct {
 		arg1 string
 		arg2 string
-		arg3 string
-	}{arg1, arg2, arg3})
+	}{arg1, arg2})
 	fake.signMutex.Unlock()
 	if fake.SignStub != nil {
-		return fake.SignStub(arg1, arg2, arg3)
+		return fake.SignStub(arg1, arg2)
 	} else {
 		return fake.signReturns.result1
 	}
@@ -41,10 +39,10 @@ func (fake *FakeSigner) SignCallCount() int {
 	return len(fake.signArgsForCall)
 }
 
-func (fake *FakeSigner) SignArgsForCall(i int) (string, string, string) {
+func (fake *FakeSigner) SignArgsForCall(i int) (string, string) {
 	fake.signMutex.RLock()
 	defer fake.signMutex.RUnlock()
-	return fake.signArgsForCall[i].arg1, fake.signArgsForCall[i].arg2, fake.signArgsForCall[i].arg3
+	return fake.signArgsForCall[i].arg1, fake.signArgsForCall[i].arg2
 }
 
 func (fake *FakeSigner) SignReturns(result1 string) {
