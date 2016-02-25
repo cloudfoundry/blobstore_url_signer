@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestSinger(t *testing.T) {
+func TestSigner(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Signer Suite")
 }

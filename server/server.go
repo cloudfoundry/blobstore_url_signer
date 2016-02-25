@@ -12,14 +12,14 @@ type Server interface {
 }
 
 type server struct {
-	protocal   string
+	protocol   string
 	unixSocket string
 	listener   net.Listener
 	handlers   ServerHandlers
 }
 
-func NewServer(protocal string, socket string, handlers ServerHandlers) Server {
-	listener, err := net.Listen(protocal, socket)
+func NewServer(protocol string, socket string, handlers ServerHandlers) Server {
+	listener, err := net.Listen(protocol, socket)
 	if err != nil {
 		panic(err)
 	}
@@ -37,7 +37,7 @@ func (s server) Start() {
 
 func (s server) Stop() {
 	s.listener.Close()
-	if s.protocal == "unix" {
+	if s.protocol == "unix" {
 		os.Remove(s.unixSocket)
 	}
 }
