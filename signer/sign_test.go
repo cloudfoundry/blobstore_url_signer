@@ -2,7 +2,7 @@ package signer_test
 
 import (
 	. "github.com/cloudfoundry/blobstore_url_signer/signer"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 

@@ -6,7 +6,7 @@ import (
 	"github.com/cloudfoundry/blobstore_url_signer/server"
 	"github.com/cloudfoundry/blobstore_url_signer/server/fakes"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
