@@ -1,7 +1,6 @@
 module github.com/cloudfoundry/blobstore_url_signer
 
-go 1.22
-toolchain go1.22.5
+go 1.24
 
 require (
 	github.com/onsi/ginkgo/v2 v2.22.2
