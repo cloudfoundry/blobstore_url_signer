@@ -3,7 +3,7 @@ module github.com/cloudfoundry/blobstore_url_signer
 go 1.24.0
 
 require (
-	github.com/onsi/ginkgo/v2 v2.27.4
+	github.com/onsi/ginkgo/v2 v2.27.5
 	github.com/onsi/gomega v1.39.0
 )
 
